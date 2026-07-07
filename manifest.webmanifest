@@ -2,7 +2,7 @@
   "name": "FBFormations21 — Gestion des formations",
   "short_name": "FB Gestion",
   "description": "Suivi des formations, facturation, ventes et documents — FBFormations21.",
-  "start_url": "gestion-formations.html",
+  "start_url": "index.html",
   "scope": "./",
   "display": "fullscreen",
   "display_override": ["fullscreen", "standalone", "minimal-ui"],
