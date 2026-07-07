@@ -1,0 +1,18 @@
+{
+  "name": "FBFormations21 — Gestion des formations",
+  "short_name": "FB Gestion",
+  "description": "Suivi des formations, facturation, ventes et documents — FBFormations21.",
+  "start_url": "gestion-formations.html",
+  "scope": "./",
+  "display": "fullscreen",
+  "display_override": ["fullscreen", "standalone", "minimal-ui"],
+  "orientation": "landscape",
+  "background_color": "#e9edf1",
+  "theme_color": "#cdd9ee",
+  "lang": "fr",
+  "icons": [
+    { "src": "icon-192.png", "sizes": "192x192", "type": "image/png", "purpose": "any" },
+    { "src": "icon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any" },
+    { "src": "icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

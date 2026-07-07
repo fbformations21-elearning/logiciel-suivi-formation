@@ -4,6 +4,14 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Gestion des formations — FBFormations21</title>
+<link rel="manifest" href="manifest.webmanifest">
+<meta name="theme-color" content="#cdd9ee">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="default">
+<meta name="apple-mobile-web-app-title" content="FB Gestion">
+<link rel="apple-touch-icon" href="icon-192.png">
+<link rel="icon" type="image/png" href="icon-192.png">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
 <link href="https://fonts.googleapis.com/css2?family=Archivo:wght@500;600;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -85,6 +93,8 @@
   .btn-primary:hover{background:var(--brand-dk)}
   .btn-ghost{background:rgba(20,32,43,.07);color:var(--ink-2)}
   .btn-ghost:hover{background:rgba(20,32,43,.13)}
+  .btn-close{background:rgba(192,57,43,.12);color:var(--brand-dk)}
+  .btn-close:hover{background:var(--brand);color:#fff}
   .btn-line{background:var(--surface);color:var(--ink-2);box-shadow:inset 0 0 0 1px var(--line-2)}
   .btn-line:hover{background:var(--panel)}
   .btn-sm{padding:7px 11px;font-size:12.5px}
@@ -395,19 +405,27 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 9V2h12v7M6 18H4a2 2 0 0 1-2-2v-5a2 2 0 0 1 2-2h16a2 2 0 0 1 2 2v5a2 2 0 0 1-2 2h-2M6 14h12v8H6z"/></svg>
     Imprimer
   </button>
-  <div class="menu-wrap suivi-only">
+  <div class="menu-wrap">
     <button class="btn btn-ghost" id="exportBtn">
       <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
       Exporter
     </button>
     <div class="menu" id="exportMenu">
       <button onclick="exporterCSV()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>Exporter en CSV (Excel)</button>
-      <button onclick="sauvegardeJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Sauvegarder (fichier .json)</button>
+      <button onclick="sauvegardeJSON()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M19 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h11l5 5v11a2 2 0 0 1-2 2z"/><path d="M17 21v-8H7v8M7 3v5h8"/></svg>Sauvegarde complète (.json)</button>
       <button onclick="document.getElementById('importFile').click()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4M17 8l-5-5-5 5M12 3v12"/></svg>Restaurer une sauvegarde</button>
       <hr>
       <button class="danger" onclick="toutEffacer()"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2m3 0v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6"/></svg>Tout effacer</button>
     </div>
   </div>
+  <button class="btn btn-ghost" id="fsBtn" onclick="togglePleinEcran()" title="Afficher en plein écran">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M8 3H5a2 2 0 0 0-2 2v3M21 8V5a2 2 0 0 0-2-2h-3M16 21h3a2 2 0 0 0 2-2v-3M3 16v3a2 2 0 0 0 2 2h3"/></svg>
+    <span class="fs-txt">Plein écran</span>
+  </button>
+  <button class="btn btn-close" onclick="quitterPage()" title="Fermer l'application">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M18 6L6 18M6 6l12 12"/></svg>
+    Fermer
+  </button>
   <input type="file" id="importFile" accept=".json" style="display:none">
 </header>
 
@@ -416,10 +434,6 @@
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"/><path d="M9 22V12h6v10"/></svg>
     Accueil
   </button>
-  <button class="tab" data-view="docs" onclick="switchView('docs')">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
-    Gestion d'une formation
-  </button>
   <button class="tab" data-view="suivi" onclick="switchView('suivi')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 3v18h18M18 17V9M13 17V5M8 17v-3"/></svg>
     Suivi des formations
@@ -427,6 +441,10 @@
   <button class="tab" data-view="ventes" onclick="switchView('ventes')">
     <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><path d="M3 6h18M16 10a4 4 0 0 1-8 0"/></svg>
     Ventes de produits
+  </button>
+  <button class="tab" data-view="docs" onclick="switchView('docs')">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6M16 13H8M16 17H8M10 9H8"/></svg>
+    Gestion d'une formation
   </button>
 </nav>
 
@@ -1434,20 +1452,59 @@ function exporterCSV(){
   telecharger(`formations_${anneeFiltre==='toutes'?'toutes':anneeFiltre}.csv`,csv,'text/csv;charset=utf-8');
   toast('Export CSV téléchargé.');
 }
-function sauvegardeJSON(){
-  telecharger(`sauvegarde_formations_${new Date().toISOString().slice(0,10)}.json`,JSON.stringify(data,null,2),'application/json');
-  toast('Sauvegarde enregistrée.');
+/* ---------- Sauvegarde / restauration complète ---------- */
+function blobToDataURL(blob){ return new Promise(res=>{ const fr=new FileReader(); fr.onload=()=>res(fr.result); fr.onerror=()=>res(null); fr.readAsDataURL(blob); }); }
+function dataURLtoBlob(d){ try{ const [meta,b64]=d.split(','); const mime=(meta.match(/:(.*?);/)||[])[1]||'application/pdf'; const bin=atob(b64); const arr=new Uint8Array(bin.length); for(let i=0;i<bin.length;i++)arr[i]=bin.charCodeAt(i); return new Blob([arr],{type:mime}); }catch(e){ return null; } }
+function pdfCollect(){ return new Promise(res=>{ if(!_db) return res([]); const items=[]; const tx=_db.transaction('pdfs','readonly'); tx.objectStore('pdfs').openCursor().onsuccess=e=>{ const cur=e.target.result; if(cur){ items.push([cur.key,cur.value]); cur.continue(); } else res(items); }; tx.onerror=()=>res(items); }); }
+async function pdfExportAll(){ const items=await pdfCollect(); const out={}; for(const [k,blob] of items){ const d=await blobToDataURL(blob); if(d) out[k]=d; } return out; }
+
+async function sauvegardeJSON(){
+  toast('Préparation de la sauvegarde…');
+  const pdfs=await pdfExportAll();
+  const backup={
+    app:'fbform-gestion', version:2, date:new Date().toISOString(),
+    data, ventes, sessions, org,
+    catFormations:catForm, catProduits:catProd,
+    paypal: JSON.parse(localStorage.getItem('fbform_paypal')||'null'),
+    metric: localStorage.getItem('fbform_metric')||'ca',
+    pdfs
+  };
+  telecharger(`sauvegarde_complete_${new Date().toISOString().slice(0,10)}.json`, JSON.stringify(backup), 'application/json');
+  localStorage.setItem('fbform_last_backup', new Date().toISOString());
+  const nbPdf=Object.keys(pdfs).length;
+  toast(`Sauvegarde complète enregistrée${nbPdf?` (${nbPdf} PDF inclus)`:''}.`);
 }
+
+async function restaurerComplete(obj){
+  data = Array.isArray(obj.data)?obj.data:[];
+  ventes = Array.isArray(obj.ventes)?obj.ventes:[];
+  sessions = Array.isArray(obj.sessions)?obj.sessions:[];
+  if(obj.org && typeof obj.org==='object') org=obj.org;
+  catForm = Array.isArray(obj.catFormations)?obj.catFormations:[];
+  catProd = Array.isArray(obj.catProduits)?obj.catProduits:[];
+  sauver(); saveVentes(); saveSessions(); saveOrg();
+  localStorage.setItem('fbform_cat_formations',JSON.stringify(catForm));
+  localStorage.setItem('fbform_cat_produits',JSON.stringify(catProd));
+  if(obj.paypal) localStorage.setItem('fbform_paypal',JSON.stringify(obj.paypal));
+  if(obj.metric) localStorage.setItem('fbform_metric',obj.metric);
+  if(obj.pdfs){ for(const k in obj.pdfs){ const b=dataURLtoBlob(obj.pdfs[k]); if(b) await pdfPut(k,b); } }
+  majAnnees(); render(); rebuildDatalists(); rebuildClients(); checkOrgWarn(); renderSessions(); renderVentes(); renderAccueil();
+  toast('Sauvegarde complète restaurée.');
+}
+
 document.getElementById('importFile').addEventListener('change',e=>{
   const file=e.target.files[0]; if(!file) return;
   const r=new FileReader();
-  r.onload=()=>{
-    try{
-      const arr=JSON.parse(r.result);
-      if(!Array.isArray(arr)) throw 0;
-      if(!confirm(`Restaurer ${arr.length} formation(s) ? Les données actuelles seront remplacées.`)) return;
-      data=arr; sauver(); majAnnees(); render(); rebuildDatalists(); rebuildClients(); toast('Sauvegarde restaurée.');
-    }catch(err){ toast('Fichier invalide.'); }
+  r.onload=async()=>{
+    let obj; try{ obj=JSON.parse(r.result); }catch(err){ toast('Fichier invalide.'); return; }
+    if(Array.isArray(obj)){ // ancien format : formations uniquement
+      if(!confirm(`Restaurer ${obj.length} formation(s) ? Les données actuelles seront remplacées.`)) return;
+      data=obj; sauver(); majAnnees(); render(); rebuildDatalists(); rebuildClients(); toast('Formations restaurées.');
+    } else if(obj && typeof obj==='object' && (obj.data||obj.ventes||obj.sessions)){
+      const n=(obj.data||[]).length, nv=(obj.ventes||[]).length, ns=(obj.sessions||[]).length, np=obj.pdfs?Object.keys(obj.pdfs).length:0;
+      if(!confirm(`Restaurer la sauvegarde complète ?\n${n} formation(s), ${nv} vente(s), ${ns} session(s), ${np} PDF.\nToutes les données actuelles seront remplacées.`)) return;
+      await restaurerComplete(obj);
+    } else { toast('Fichier non reconnu.'); }
   };
   r.readAsText(file); e.target.value='';
 });
@@ -1514,16 +1571,17 @@ function renderAccueil(){
   const anneeForm=data.filter(f=>f.dateInt && f.dateInt.slice(0,4)===String(y));
   const heures=anneeForm.reduce((s,f)=>s+(+f.htotal||0),0);
   document.getElementById('homeHeures').textContent=`${fNum.format(heures)} h`;
-  document.getElementById('homeNb').textContent=fNum.format(anneeForm.length);
+  const nbForm=anneeForm.filter(f=>(f.formation||'').trim()).length;
+  document.getElementById('homeNb').textContent=fNum.format(nbForm);
 
   // Formations par type — uniquement celles avec une heure total renseignée
   document.getElementById('homeTypesYear').textContent=y;
-  const avecHeures=anneeForm.filter(f=>(+f.htotal||0)>0);
+  const avecHeures=anneeForm.filter(f=>(+f.heures||0)>0);
   const parType={};
   avecHeures.forEach(f=>{
     const t=(f.formation||'—').trim()||'—';
     if(!parType[t]) parType[t]={n:0,h:0};
-    parType[t].n++; parType[t].h+=(+f.htotal||0);
+    parType[t].n++; parType[t].h+=(+f.heures||0);
   });
   const types=Object.entries(parType).sort((a,b)=>b[1].n-a[1].n);
   const list=document.getElementById('homeTypesList');
@@ -1532,7 +1590,7 @@ function renderAccueil(){
     ? types.map(([t,v])=>`<div class="type-card" data-t="${esc(t)}" onclick="voirType(this.dataset.t)" title="Voir dans le suivi">
         <div class="tc-lab">${esc(t)}</div>
         <div class="tc-val">${v.n}</div>
-        <div class="tc-sub"><b>${fNum.format(v.h)}</b> h totales</div>
+        <div class="tc-sub"><b>${fNum.format(v.h)}</b> h</div>
       </div>`).join('')
     : `<div class="line-empty">Aucune formation enregistrée pour ${y}. Les données apparaîtront ici au fil de vos saisies dans « Suivi des formations ».</div>`;
 }
@@ -2106,13 +2164,50 @@ function apprendreProduit(name){
   }
 }
 
+/* ---------- Plein écran / Fermeture ---------- */
+function togglePleinEcran(){
+  if(!document.fullscreenElement){
+    (document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen||(()=>{})).call(document.documentElement);
+  } else {
+    (document.exitFullscreen||document.webkitExitFullscreen||(()=>{})).call(document);
+  }
+}
+document.addEventListener('fullscreenchange',()=>{
+  const on=!!document.fullscreenElement;
+  localStorage.setItem('fbform_autofs', on?'1':'0');
+  const t=document.querySelector('#fsBtn .fs-txt'); if(t) t.textContent = on?'Quitter plein écran':'Plein écran';
+});
+function quitterPage(){
+  if(!confirm('Fermer l\u2019application ? Vos données restent enregistrées.')) return;
+  if(document.fullscreenElement){ try{ document.exitFullscreen(); }catch(e){} }
+  window.open('','_self'); window.close();
+  setTimeout(()=>toast('Votre navigateur empêche la fermeture automatique : fermez l\u2019onglet (Ctrl+W).'), 400);
+}
+
 /* ---------- Init ---------- */
+if('serviceWorker' in navigator){ window.addEventListener('load',()=>navigator.serviceWorker.register('sw.js').catch(()=>{})); }
 charger(); majAnnees(); render();
 initDB(); loadOrg(); loadSessions(); loadVentes(); loadCatalogues();
 switchView('accueil');
 document.querySelector('#view-suivi thead').addEventListener('click',e=>{ const th=e.target.closest('th.sortable'); if(th) trierF(th.dataset.sort); });
 document.querySelector('#view-ventes thead').addEventListener('click',e=>{ const th=e.target.closest('th.sortable'); if(th) trierV(th.dataset.sort); });
+setTimeout(()=>{
+  if(data.length||ventes.length||sessions.length){
+    const lb=localStorage.getItem('fbform_last_backup');
+    const stale = !lb || (Date.now()-new Date(lb).getTime() > 7*864e5);
+    if(stale) toast('💾 Pensez à une sauvegarde complète (menu Exporter) — votre filet de sécurité.');
+  }
+}, 3000);
 document.addEventListener('keydown',e=>{ if(e.key==='Escape'){ fermerSession(); fermerOrg(); fermerDoc(); fermerVente(); } });
+if(localStorage.getItem('fbform_autofs')==='1'){
+  const reprendreFS=()=>{
+    window.removeEventListener('pointerdown',reprendreFS); window.removeEventListener('keydown',reprendreFS);
+    if(!document.fullscreenElement){ try{ (document.documentElement.requestFullscreen||document.documentElement.webkitRequestFullscreen||(()=>{})).call(document.documentElement); }catch(e){} }
+  };
+  window.addEventListener('pointerdown',reprendreFS);
+  window.addEventListener('keydown',reprendreFS);
+  setTimeout(()=>{ if(!document.fullscreenElement) toast('Cliquez n\u2019importe où pour revenir en plein écran.'); }, 1200);
+}
 </script>
 </body>
 </html>
